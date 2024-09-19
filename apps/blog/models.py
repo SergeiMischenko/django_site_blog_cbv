@@ -16,6 +16,18 @@ def post_images_directory_path(instance: "Post", filename: str):
     )
 
 
+class PostManager(models.Manager):
+    """
+    Кастомный менеджер для модели постов
+    """
+
+    def get_queryset(self):
+        """
+        Список постов (SQL запрос с фильтрацией по статусу опубликованно)
+        """
+        return super().get_queryset().filter(status="published")
+
+
 class Post(models.Model):
     """
     Модель постов для блога
@@ -68,6 +80,9 @@ class Post(models.Model):
         blank=True,
     )
     fixed = models.BooleanField(verbose_name="Прикреплено", default=False)
+
+    objects = models.Manager()
+    custom = PostManager()
 
     class Meta:
         """
@@ -139,4 +154,4 @@ class Category(MPTTModel):
         """
         Получаем прямую ссылку на категорию
         """
-        return reverse('post_by_category', kwargs={'slug': self.slug})
+        return reverse("post_by_category", kwargs={"slug": self.slug})
