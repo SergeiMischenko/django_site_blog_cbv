@@ -1,8 +1,19 @@
 from django.contrib.auth.models import User
 from django.core.validators import FileExtensionValidator
 from django.db import models
+from django.urls import reverse
 from mptt.fields import TreeForeignKey
 from mptt.models import MPTTModel
+
+from apps.services.utils import unique_slugify
+
+
+def post_images_directory_path(instance: "Post", filename: str):
+    return "images/thumbnails/{category_name}/{post_name}/{filename}".format(
+        category_name=instance.category.title,
+        post_name=instance.slug,
+        filename=filename,
+    )
 
 
 class Post(models.Model):
@@ -13,7 +24,7 @@ class Post(models.Model):
     STATUS_OPTIONS = (("published", "Опубликовано"), ("draft", "Черновик"))
 
     title = models.CharField(verbose_name="Название записи", max_length=255)
-    slug = models.SlugField(verbose_name="URL", max_length=255, blank=True, unique=True)
+    slug = models.SlugField(verbose_name="URL", max_length=255, blank=True)
     description = models.TextField(verbose_name="Краткое описание", max_length=500)
     text = models.TextField(verbose_name="Полный текст записи")
     category = TreeForeignKey(
@@ -26,7 +37,7 @@ class Post(models.Model):
         verbose_name="Изображение записи",
         default="default.jpg",
         blank=True,
-        upload_to="images/thumbnails/",
+        upload_to=post_images_directory_path,
         validators=[
             FileExtensionValidator(
                 allowed_extensions=("png", "jpg", "webp", "jpeg", "gif")
@@ -71,6 +82,20 @@ class Post(models.Model):
 
     def __str__(self):
         return self.title
+
+    def get_absolute_url(self):
+        """
+        Получаем прямую ссылку на статью
+        """
+
+        return reverse("post_detail", kwargs={"slug": self.slug})
+
+    def save(self, *args, **kwargs):
+        """
+        При сохранении генерируем слаг и проверяем на уникальность
+        """
+        self.slug = unique_slugify(self, self.title)
+        super().save(*args, **kwargs)
 
 
 class Category(MPTTModel):
