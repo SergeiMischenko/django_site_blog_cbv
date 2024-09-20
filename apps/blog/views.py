@@ -1,6 +1,7 @@
 from django.shortcuts import render
-from django.views.generic import DetailView, ListView
+from django.views.generic import DetailView, ListView, CreateView
 
+from apps.blog.forms import PostCreateForm
 from apps.blog.models import Category, Post
 
 
@@ -25,6 +26,25 @@ class PostDetailView(DetailView):
         context = super().get_context_data(**kwargs)
         context["title"] = self.object.title
         return context
+
+
+class PostCreateView(CreateView):
+    """
+    Представление: создание материалов на сайте
+    """
+    model = Post
+    template_name = 'blog/post_create.html'
+    form_class = PostCreateForm
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Добавление статьи на сайт'
+        return context
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        form.save()
+        return super().form_valid(form)
 
 
 class PostFromCategory(ListView):
