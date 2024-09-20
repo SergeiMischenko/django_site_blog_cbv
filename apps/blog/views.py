@@ -39,7 +39,7 @@ class PostCreateView(LoginRequiredMixin, CreateView):
     model = Post
     template_name = "blog/post_create.html"
     form_class = PostCreateForm
-    login_url = 'home'
+    login_url = "home"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -61,8 +61,8 @@ class PostUpdateView(AuthorRequiredMixin, SuccessMessageMixin, UpdateView):
     template_name = "blog/post_update.html"
     context_object_name = "post"
     form_class = PostUpdateForm
-    login_url = 'home'
-    success_message = 'Запись была успешно обновлена!'
+    login_url = "home"
+    success_message = "Запись была успешно обновлена!"
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
