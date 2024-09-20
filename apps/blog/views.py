@@ -1,8 +1,11 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.messages.views import SuccessMessageMixin
 from django.shortcuts import render
-from django.views.generic import DetailView, ListView, CreateView
+from django.views.generic import CreateView, DetailView, ListView, UpdateView
 
-from apps.blog.forms import PostCreateForm
+from apps.blog.forms import PostCreateForm, PostUpdateForm
 from apps.blog.models import Category, Post
+from apps.services.mixins import AuthorRequiredMixin
 
 
 class PostListView(ListView):
@@ -28,21 +31,46 @@ class PostDetailView(DetailView):
         return context
 
 
-class PostCreateView(CreateView):
+class PostCreateView(LoginRequiredMixin, CreateView):
     """
     Представление: создание материалов на сайте
     """
+
     model = Post
-    template_name = 'blog/post_create.html'
+    template_name = "blog/post_create.html"
     form_class = PostCreateForm
+    login_url = 'home'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = 'Добавление статьи на сайт'
+        context["title"] = "Добавление статьи на сайт"
         return context
 
     def form_valid(self, form):
         form.instance.author = self.request.user
+        form.save()
+        return super().form_valid(form)
+
+
+class PostUpdateView(AuthorRequiredMixin, SuccessMessageMixin, UpdateView):
+    """
+    Представление: обновления материала на сайте
+    """
+
+    model = Post
+    template_name = "blog/post_update.html"
+    context_object_name = "post"
+    form_class = PostUpdateForm
+    login_url = 'home'
+    success_message = 'Запись была успешно обновлена!'
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["title"] = f"Обновление статьи: {self.object.title}"
+        return context
+
+    def form_valid(self, form):
+        # form.instance.updater = self.request.user
         form.save()
         return super().form_valid(form)
 
