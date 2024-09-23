@@ -4,6 +4,7 @@ from django.db import models
 from django.urls import reverse
 from mptt.fields import TreeForeignKey
 from mptt.models import MPTTModel
+from taggit.managers import TaggableManager
 
 from apps.services.utils import unique_slugify
 
@@ -88,6 +89,7 @@ class Post(models.Model):
 
     objects = models.Manager()
     custom = PostManager()
+    tags = TaggableManager()
 
     class Meta:
         """
