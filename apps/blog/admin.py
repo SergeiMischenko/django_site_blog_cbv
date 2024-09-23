@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django_mptt_admin.admin import DjangoMpttAdmin
 
-from apps.blog.models import Category, Post
+from apps.blog.models import Category, Comment, Post
 
 
 @admin.register(Category)
@@ -20,3 +20,12 @@ class PostAdmin(admin.ModelAdmin):
     """
 
     prepopulated_fields = {"slug": ("title",)}
+
+
+@admin.register(Comment)
+class CommentAdminPage(DjangoMpttAdmin):
+    """
+    Админ-панель модели комментариев
+    """
+
+    pass
