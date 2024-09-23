@@ -10,7 +10,12 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
+import os
 from pathlib import Path
+
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -19,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-dzx4a5g9h_0v$%v(zyn!g7w=3tw*pr-5lo24y+aoon11_%a&iv"
+SECRET_KEY = str(os.getenv("SECRET_KEY"))
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -45,6 +50,7 @@ INSTALLED_APPS = [
     "mptt",
     "django_mptt_admin",
     "debug_toolbar",
+    "django_recaptcha",
 ]
 
 MIDDLEWARE = [
@@ -130,3 +136,6 @@ MEDIA_URL = "/media/"
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+RECAPTCHA_PUBLIC_KEY = str(os.getenv("RECAPTCHA_KEY"))
+RECAPTCHA_PRIVATE_KEY = str(os.getenv("RECAPTCHA_SECRET"))

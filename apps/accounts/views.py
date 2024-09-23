@@ -4,8 +4,7 @@ from django.db import transaction
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DetailView, UpdateView
 
-from .forms import (ProfileUpdateForm, UserLoginForm, UserRegisterForm,
-                    UserUpdateForm)
+from .forms import ProfileUpdateForm, UserLoginForm, UserRegisterForm, UserUpdateForm
 from .models import Profile
 
 

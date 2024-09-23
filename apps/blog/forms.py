@@ -1,4 +1,5 @@
 from django import forms
+from django_recaptcha.fields import ReCaptchaField
 
 from .models import Comment, Post
 
@@ -7,6 +8,8 @@ class PostCreateForm(forms.ModelForm):
     """
     Форма добавления статей на сайте
     """
+
+    recaptcha = ReCaptchaField()
 
     class Meta:
         model = Post
@@ -18,6 +21,7 @@ class PostCreateForm(forms.ModelForm):
             "text",
             "thumbnail",
             "status",
+            "recaptcha",
         )
 
     def __init__(self, *args, **kwargs):
@@ -26,6 +30,8 @@ class PostCreateForm(forms.ModelForm):
         """
         super().__init__(*args, **kwargs)
         for field in self.fields:
+            if field == "recaptcha":
+                break
             self.fields[field].widget.attrs.update(
                 {"class": "form-control", "autocomplete": "off"}
             )
@@ -54,6 +60,8 @@ class CommentCreateForm(forms.ModelForm):
     Форма добавления комментариев к статьям
     """
 
+    recaptcha = ReCaptchaField()
+
     parent = forms.IntegerField(widget=forms.HiddenInput, required=False)
     content = forms.CharField(
         label="",
@@ -69,4 +77,4 @@ class CommentCreateForm(forms.ModelForm):
 
     class Meta:
         model = Comment
-        fields = ("content",)
+        fields = ("content", "recaptcha")
