@@ -51,6 +51,8 @@ INSTALLED_APPS = [
     "django_mptt_admin",
     "debug_toolbar",
     "django_recaptcha",
+    "ckeditor_uploader",
+    "ckeditor",
 ]
 
 MIDDLEWARE = [
@@ -131,6 +133,31 @@ STATICFILES_DIRS = [BASE_DIR / "templates/js/"]
 
 MEDIA_ROOT = BASE_DIR / "media"
 MEDIA_URL = "/media/"
+
+CKEDITOR_UPLOAD_PATH = "uploads/"
+CKEDITOR_CONFIGS = {
+    "awesome_ckeditor": {
+        "toolbar": "custom",
+        "toolbar_custom": [
+            ["Bold", "Italic", "Underline"],
+            [
+                "NumberedList",
+                "BulletedList",
+                "-",
+                "Outdent",
+                "Indent",
+                "-",
+                "JustifyLeft",
+                "JustifyCenter",
+                "JustifyRight",
+                "JustifyBlock",
+            ],
+            ["Link", "Unlink"],
+            ["RemoveFormat", "Source"],
+        ],
+        "height": 300,
+    },
+}
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
