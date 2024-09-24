@@ -64,6 +64,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "debug_toolbar.middleware.DebugToolbarMiddleware",
+    "apps.accounts.middleware.ActiveUserMiddleware",
 ]
 
 ROOT_URLCONF = "django_site_blog_cbv.urls"
@@ -166,3 +167,10 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 RECAPTCHA_PUBLIC_KEY = str(os.getenv("RECAPTCHA_KEY"))
 RECAPTCHA_PRIVATE_KEY = str(os.getenv("RECAPTCHA_SECRET"))
+
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.filebased.FileBasedCache",
+        "LOCATION": (BASE_DIR / "cache"),
+    }
+}
