@@ -197,3 +197,48 @@ class RatingCreateView(View):
         return JsonResponse(
             {"status": "created", "rating_sum": rating.post.get_sum_rating()}
         )
+
+
+def tr_handler404(request, exception):
+    """
+    Обработчик ошибки 404
+    """
+    return render(
+        request,
+        "errors/error_page.html",
+        status=404,
+        context={
+            "title": "Страница не найдена: 404",
+            "error_message": "К сожалению такая страница была не найдена, или перемещена",
+        },
+    )
+
+
+def tr_handler500(request):
+    """
+    Обработчик ошибки 500
+    """
+    return render(
+        request,
+        "errors/error_page.html",
+        status=500,
+        context={
+            "title": "Ошибка сервера: 500",
+            "error_message": "Внутренняя ошибка сайта, вернитесь на главную страницу, отчет об ошибке мы направим администрации сайта",
+        },
+    )
+
+
+def tr_handler403(request, exception):
+    """
+    Обработчик ошибки 403
+    """
+    return render(
+        request,
+        "errors/error_page.html",
+        status=403,
+        context={
+            "title": "Ошибка доступа: 403",
+            "error_message": "Доступ к этой странице ограничен",
+        },
+    )
